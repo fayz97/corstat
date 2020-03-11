@@ -1,4 +1,5 @@
 import 'package:corstat/pages/home.dart';
+import 'package:corstat/services/coronavirus_tracker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -9,10 +10,14 @@ class Loading extends StatefulWidget {
 
 class _LoadingState extends State<Loading> {
 
-  void getData() async {
-    await Future.delayed(Duration(seconds: 5));
+  bool isError = false;
 
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()));
+  void getData() async {
+    Map data = await CoronaVirusTracker.getAll(); 
+
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home(
+      allData: data,
+    )));
   }
 
   @override
@@ -21,8 +26,7 @@ class _LoadingState extends State<Loading> {
     this.getData();
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildLoadingPage() {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -32,33 +36,50 @@ class _LoadingState extends State<Loading> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text(
-                'CORSTAT',
-                style: TextStyle(
-                  fontFamily: 'ArchivoBlack',
-                  fontWeight: FontWeight.w900,
-                  fontSize: 40.0,
-                  letterSpacing: 10.0,
-                  color: Colors.white60,
-                ),
-              ),
-              Text(
-                'Coronavirus Statistics',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue[200],
-                  letterSpacing: 2.0,
-                  fontSize: 15.0
-                ),
-              ),
+              _buildCorstatTitleText(),
+              _buildCorstatDescText(),
               SizedBox(height: 20.0),
-              SpinKitFoldingCube(
-                color: Colors.blue[100],
-              ),
+              _buildLoadingSpinner(),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Widget _buildCorstatTitleText() {
+    return Text(
+      'CORSTAT',
+      style: TextStyle(
+        fontFamily: 'ArchivoBlack',
+        fontWeight: FontWeight.w900,
+        fontSize: 40.0,
+        letterSpacing: 10.0,
+        color: Colors.white60,
+      ),
+    );
+  }
+
+  Widget _buildCorstatDescText() {
+    return Text(
+      'Coronavirus Statistics',
+      style: TextStyle(
+        fontWeight: FontWeight.bold,
+        color: Colors.blue[200],
+        letterSpacing: 2.0,
+        fontSize: 15.0
+      ),
+    );
+  }
+
+  Widget _buildLoadingSpinner() {
+    return SpinKitFoldingCube(
+        color: Colors.blue[100],
+      );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildLoadingPage();
   }
 }
