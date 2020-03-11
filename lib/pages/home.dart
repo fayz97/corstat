@@ -38,7 +38,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: _buildAppBar(),
       body: _buildBody(),
-      drawer: _buildDrawer(),
+      // drawer: _buildDrawer(),
     );
   }
 
@@ -96,6 +96,7 @@ class _HomeState extends State<Home> {
 
   Widget _buildAppBar() {
     return AppBar(
+        leading: Container(),
         title: Text(
           'CORSTAT',
           style: TextStyle(
