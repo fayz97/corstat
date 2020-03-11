@@ -1,9 +1,10 @@
+import 'package:corstat/models/latest.dart';
 import 'package:flutter/material.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
 
 class Home extends StatefulWidget {
 
   Map allData;
-
   Home({@required this.allData});
 
   @override
@@ -11,8 +12,25 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
+  List<Latest> listLatest = [];
+  Map<String, Color> mappingChartColor = {
+    'confirmed': Colors.amber[500],
+    'deaths': Colors.redAccent[400],
+    'recovered': Colors.green[500],
+  };
+
   @override
   Widget build(BuildContext context) {
+    this.listLatest = [];
+    this.widget.allData['latest'].forEach((key, value) {
+      Latest latest = Latest(
+        name: key,
+        count: value,
+        pieChartColor: this.mappingChartColor[key],
+      );
+      this.listLatest.add(latest);
+    });
     return _buildHomePage();
   }
 
@@ -42,6 +60,33 @@ class _HomeState extends State<Home> {
           child: Column(
             children: <Widget>[
               _buildTableLatest(this.widget.allData['latest']),
+              SizedBox(height: 20.0),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(25.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      // color: Colors.blue[200],
+                    ),
+                    child: charts.PieChart(
+                      [
+                        new charts.Series<Latest, String>(
+                          id: 'latest',
+                          domainFn: (Latest latest, _) => latest.name,
+                          measureFn: (Latest latest, _) => latest.count,
+                          colorFn: (Latest latest, _) => charts.ColorUtil.fromDartColor(latest.pieChartColor),
+                          data: this.listLatest,
+                        ),
+                      ],
+                      animate: true,
+                      defaultRenderer: new charts.ArcRendererConfig(
+                        arcWidth: 60,
+                        arcRendererDecorators: [new charts.ArcLabelDecorator()]
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
