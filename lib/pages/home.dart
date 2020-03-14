@@ -25,13 +25,13 @@ class _HomeState extends State<Home> {
     'recovered': Colors.green[500],
   };
 
-  @override
-  void initState() {
-    super.initState();
-    if (this.widget.allData == null) {
-      _setWidgetAllData();
-    }
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   if (this.widget.allData == null) {
+  //     _setWidgetAllData();
+  //   }
+  // }
 
   Future<void> _setWidgetAllData() async {
     this.widget.allData = await _getDataLatest();
@@ -46,6 +46,9 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    if (this.widget.allData == null) {
+      _setWidgetAllData();
+    }
     if (this.widget.allData != null) {
       this.listLatest = [];
       this.widget.allData['latest'].forEach((key, value) {
@@ -159,13 +162,29 @@ class _HomeState extends State<Home> {
       margin: EdgeInsets.only(top: 20.0),
       child: Column(
         children: <Widget>[
-          Text(
-            'Latest',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              letterSpacing: 2.0,
-              fontSize: 15.0,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'Latest',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 2.0,
+                  fontSize: 15.0,
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    this.widget.allData = null;
+                    this.isLoaded = false;
+                  });
+                },
+                child: Icon(
+                  Icons.refresh,
+                ),
+              )
+            ],
           ),
           SizedBox(height: 10.0),
           Row(
