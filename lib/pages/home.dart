@@ -1,11 +1,14 @@
+import 'package:corstat/components/main_drawer.dart';
 import 'package:corstat/models/latest.dart';
+import 'package:corstat/services/coronavirus_tracker.dart';
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Home extends StatefulWidget {
 
   Map allData;
-  Home({@required this.allData});
+  Home({this.allData});
 
   @override
   _HomeState createState() => _HomeState();
@@ -14,6 +17,8 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
 
   List<Latest> listLatest = [];
+  bool isLoaded = false;
+
   Map<String, Color> mappingChartColor = {
     'confirmed': Colors.amber[500],
     'deaths': Colors.redAccent[400],
@@ -21,24 +26,62 @@ class _HomeState extends State<Home> {
   };
 
   @override
-  Widget build(BuildContext context) {
-    this.listLatest = [];
-    this.widget.allData['latest'].forEach((key, value) {
-      Latest latest = Latest(
-        name: key,
-        count: value,
-        pieChartColor: this.mappingChartColor[key],
-      );
-      this.listLatest.add(latest);
+  void initState() {
+    super.initState();
+    if (this.widget.allData == null) {
+      _setWidgetAllData();
+    }
+  }
+
+  Future<void> _setWidgetAllData() async {
+    this.widget.allData = await _getDataLatest();
+    setState(() {
+      this.isLoaded = true;
     });
-    return _buildHomePage();
+  }
+
+  Future<Map> _getDataLatest() async {
+    return await CoronaVirusTracker.getAll();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (this.widget.allData != null) {
+      this.listLatest = [];
+      this.widget.allData['latest'].forEach((key, value) {
+        Latest latest = Latest(
+          name: key,
+          count: value,
+          pieChartColor: this.mappingChartColor[key],
+        );
+        this.listLatest.add(latest);
+      });
+      return _buildHomePage();
+    }
+    else {
+      return _buildLoadingPage();
+    }
+  }
+
+  Widget _buildLoadingPage() {
+    return Scaffold(
+      appBar: _buildAppBar(),
+      drawer: MainDrawer(),
+      body: Container(
+        child: Center(
+          child: SpinKitHourGlass(
+            color: Colors.blue[900],
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _buildHomePage() {
     return Scaffold(
       appBar: _buildAppBar(),
       body: _buildBody(),
-      // drawer: _buildDrawer(),
+      drawer: MainDrawer(currPage: 'home',),
     );
   }
 
@@ -96,7 +139,6 @@ class _HomeState extends State<Home> {
 
   Widget _buildAppBar() {
     return AppBar(
-        leading: Container(),
         title: Text(
           'CORSTAT',
           style: TextStyle(
@@ -110,19 +152,6 @@ class _HomeState extends State<Home> {
         backgroundColor: Colors.blue[300],
         elevation: 0.0,
       );
-  }
-
-  Widget _buildDrawer() {
-    return Drawer(
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.blue[300],
-        ),
-        child: SafeArea(
-          child: Text('Drawer'),
-        ),
-      ),
-    );
   }
 
   Widget _buildTableLatest(Map<String, dynamic> latestData) {

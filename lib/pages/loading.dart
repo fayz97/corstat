@@ -13,10 +13,10 @@ class _LoadingState extends State<Loading> {
   bool isError = false;
 
   void getData() async {
-    Map data = await CoronaVirusTracker.getAll(); 
+    // Map data = await CoronaVirusTracker.getAll(); 
+    await Future.delayed(Duration(seconds: 2));
 
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home(
-      allData: data,
     )));
   }
 
