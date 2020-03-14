@@ -182,6 +182,7 @@ class _HomeState extends State<Home> {
                 },
                 child: Icon(
                   Icons.refresh,
+                  size: 30.0,
                 ),
               )
             ],
