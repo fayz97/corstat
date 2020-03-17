@@ -3,6 +3,7 @@ import 'package:corstat/pages/group_by_type/confirmed.dart';
 import 'package:corstat/pages/group_by_type/deaths.dart';
 import 'package:corstat/pages/group_by_type/recovered.dart';
 import 'package:corstat/pages/home.dart';
+import 'package:corstat/pages/locations.dart';
 import 'package:corstat/services/coronavirus_tracker.dart';
 import 'package:flutter/material.dart';
 
@@ -66,17 +67,17 @@ class _MainDrawerState extends State<MainDrawer> {
               }
             },
           ),
-          SizedBox(height: 20.0),
-          Padding(
-            padding: const EdgeInsets.only(left: 20.0),
-            child: Text(
-              'Group By Type',
-              style: TextStyle(
-                fontSize: 15.0,
-                color: Colors.white,
-              ),
-            ),
-          ),
+          // SizedBox(height: 20.0),
+          // Padding(
+          //   padding: const EdgeInsets.only(left: 20.0),
+          //   child: Text(
+          //     'Group By Type',
+          //     style: TextStyle(
+          //       fontSize: 15.0,
+          //       color: Colors.white,
+          //     ),
+          //   ),
+          // ),
           ListTile(
             title: Text('Confirmed'),
             onTap: () {
@@ -107,6 +108,17 @@ class _MainDrawerState extends State<MainDrawer> {
               }
               else {
                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Recovered()));
+              }              
+            },
+          ),
+          ListTile(
+            title: Text('Locations'),
+            onTap: () {
+              if (this.widget.currPage == 'locations') {
+                Navigator.of(context).pop();
+              }
+              else {
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Locations()));
               }              
             },
           ),

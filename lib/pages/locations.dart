@@ -6,38 +6,38 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 
-class Recovered extends StatefulWidget {
+class Locations extends StatefulWidget {
   @override
-  _RecoveredState createState() => _RecoveredState();
+  _LocationsState createState() => _LocationsState();
 }
 
-class _RecoveredState extends State<Recovered> {
+class _LocationsState extends State<Locations> {
 
   bool isLoaded = false;
-  Map recoveredData;
+  Map locationsData;
   List locations;
   final formatter = new NumberFormat("#,###");
 
-    Future<void> _setWidgetRecoveredData() async {
-    this.recoveredData = await _getDataRecovered();
-    this.locations = this.recoveredData['locations'].toList();
-    this.locations.sort((a,b) => b['latest'].compareTo(a['latest']));
+    Future<void> _setWidgetLocationsData() async {
+    this.locationsData = await _getDataLocations();
+    this.locations = this.locationsData['locations'].toList();
+    this.locations.sort((a,b) => a['country'].compareTo(b['country']));
     setState(() {
       this.isLoaded = true;
     });
   }
 
-  Future<Map> _getDataRecovered() async {
-    return await CoronaVirusTracker.getRecovered();
+  Future<Map> _getDataLocations() async {
+    return await CoronaVirusTracker.getConfirmed();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (this.recoveredData == null) {
-      _setWidgetRecoveredData();
+    if (this.locationsData == null) {
+      _setWidgetLocationsData();
     }
 
-    if (this.recoveredData == null) {
+    if (this.locationsData == null) {
       return _buildLoadingPage();
     }
     else {
@@ -49,7 +49,7 @@ class _RecoveredState extends State<Recovered> {
   Widget _buildPage() {
     return Scaffold(
       appBar: _buildAppBar(),
-      drawer: MainDrawer(currPage: 'recovered',),
+      drawer: MainDrawer(currPage: 'locations',),
       body: _buildBody(),
     );
   }
@@ -57,7 +57,7 @@ class _RecoveredState extends State<Recovered> {
   Widget _buildLoadingPage() {
     return Scaffold(
       appBar: _buildAppBar(),
-      drawer: MainDrawer(),
+      // drawer: MainDrawer(),
       body: Container(
         child: Center(
           child: SpinKitHourGlass(
@@ -85,15 +85,13 @@ class _RecoveredState extends State<Recovered> {
           ),
           child: Column(
             children: <Widget>[
-              _buildMainTextRecovered(this.recoveredData['latest']),
+              _buildMainTextLocations(this.locationsData['latest']),
               Expanded(
                 child: Row(
                   children: <Widget>[
                     Expanded(
                       child: Column(
                         children: <Widget>[
-                          Text('Countries'),
-                          SizedBox(height: 20.0,),
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
@@ -107,9 +105,8 @@ class _RecoveredState extends State<Recovered> {
                                   // return Text('tes');
                                   return Card(
                                     child: ListTile(
-                                      leading: Text((index + 1).toString()),
                                       title: Text(
-                                        "${this.locations[index]['country']} ${this.locations[index]['province']} ${formatter.format(this.locations[index]['latest']).toString()}",
+                                        "${this.locations[index]['country']} ${this.locations[index]['province']}",
                                       ),
                                     ),
                                   );
@@ -129,7 +126,7 @@ class _RecoveredState extends State<Recovered> {
     ));
   }
 
-  Widget _buildMainTextRecovered(recovered) {
+  Widget _buildMainTextLocations(locations) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
@@ -139,21 +136,11 @@ class _RecoveredState extends State<Recovered> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Text(
-                'Recovered',
+                'Locations',
                 style: TextStyle(
                   fontSize: 34.0,
                   fontWeight: FontWeight.w500,
                   letterSpacing: 1.0,
-                  color: Colors.green[500],
-                ),
-              ),
-              SizedBox(height: 20.0),
-              Text(
-                formatter.format(recovered).toString(),
-                style: TextStyle(
-                  fontSize: 40.0,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Rubik',
                   color: Colors.green[500],
                 ),
               ),
@@ -167,7 +154,7 @@ class _RecoveredState extends State<Recovered> {
   Widget _buildAppBar() {
     return AppBar(
         title: Text(
-          'RECOVERED',
+          'LOCATIONS',
           style: TextStyle(
             fontFamily: 'ArchivoBlack',
             fontWeight: FontWeight.w900,
