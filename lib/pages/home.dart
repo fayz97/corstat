@@ -4,6 +4,7 @@ import 'package:corstat/services/coronavirus_tracker.dart';
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:intl/intl.dart';
 
 class Home extends StatefulWidget {
 
@@ -18,6 +19,7 @@ class _HomeState extends State<Home> {
 
   List<Latest> listLatest = [];
   bool isLoaded = false;
+  final formatter = new NumberFormat("#,###");
 
   Map<String, Color> mappingChartColor = {
     'confirmed': Colors.amber[500],
@@ -215,7 +217,7 @@ class _HomeState extends State<Home> {
         ),
         SizedBox(height: 10.0),
         Text(
-          deaths.toString(),
+          formatter.format(deaths).toString(),
           style: TextStyle(
             fontSize: 20.0,
             fontWeight: FontWeight.bold,
@@ -241,7 +243,7 @@ class _HomeState extends State<Home> {
         ),
         SizedBox(height: 10.0),
         Text(
-          recovered.toString(),
+          formatter.format(recovered).toString(),
           style: TextStyle(
             fontSize: 20.0,
             fontWeight: FontWeight.bold,
@@ -267,7 +269,7 @@ class _HomeState extends State<Home> {
         ),
         SizedBox(height: 10.0),
         Text(
-          confimed.toString(),
+          formatter.format(confimed).toString(),
           style: TextStyle(
             fontSize: 20.0,
             fontWeight: FontWeight.bold,
