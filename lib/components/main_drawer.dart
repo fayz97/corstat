@@ -1,4 +1,7 @@
 import 'package:corstat/pages/about_us.dart';
+import 'package:corstat/pages/group_by_type/confirmed.dart';
+import 'package:corstat/pages/group_by_type/deaths.dart';
+import 'package:corstat/pages/group_by_type/recovered.dart';
 import 'package:corstat/pages/home.dart';
 import 'package:corstat/services/coronavirus_tracker.dart';
 import 'package:flutter/material.dart';
@@ -56,7 +59,7 @@ class _MainDrawerState extends State<MainDrawer> {
             title: Text('About Us'),
             onTap: () {
               if (this.widget.currPage == 'about-us') {
-                return Navigator.of(context).pop();
+                Navigator.of(context).pop();
               }
               else {
                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AboutUs()));
@@ -76,12 +79,36 @@ class _MainDrawerState extends State<MainDrawer> {
           ),
           ListTile(
             title: Text('Confirmed'),
+            onTap: () {
+              if (this.widget.currPage == 'confirmed') {
+                Navigator.of(context).pop();
+              }
+              else {
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Confirmed()));
+              }
+            },
           ),
           ListTile(
             title: Text('Deaths'),
+            onTap: () {
+              if (this.widget.currPage == 'deaths') {
+                Navigator.of(context).pop();
+              }
+              else {
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Deaths()));
+              }              
+            },
           ),
           ListTile(
             title: Text('Recovered'),
+            onTap: () {
+              if (this.widget.currPage == 'recovered') {
+                Navigator.of(context).pop();
+              }
+              else {
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Recovered()));
+              }              
+            },
           ),
         ],
       ),
